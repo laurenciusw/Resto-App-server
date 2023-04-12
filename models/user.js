@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+const { hashPassword } = require("../helpers/helper");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,65 +9,74 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Cuisine, {foreignKey : "authorId"})
-
+      User.hasMany(models.Cuisine, { foreignKey: "authorId" });
     }
   }
-  User.init({
-    username: {
-      type:DataTypes.STRING,
-      allowNull:false,
-      validate:{
-        notNull:{
-          msg:`Nama harus diisi`
+  User.init(
+    {
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: `Nama harus diisi`,
+          },
+          notEmpty: {
+            msg: `Nama harus diisi`,
+          },
         },
-        notEmpty:{
-          msg:`Nama harus diisi`
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: {
+            msg: `Email harus berupa fornat email`,
+          },
+          notNull: {
+            msg: `Email harus diisi`,
+          },
+          notEmpty: {
+            msg: `Email harus diisi`,
+          },
         },
-      }
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: {
+            args: [5],
+            msg: `password min 5 character`,
+          },
+          notNull: {
+            msg: `Password harus diisi`,
+          },
+          notEmpty: {
+            msg: `Password harus diisi`,
+          },
+          customValidator(value) {
+            if (value.length < 5) {
+              throw new Error("Password minimal 5 karakter");
+            }
+          },
+        },
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: "admin",
+      },
+      phoneNumber: DataTypes.STRING,
+      address: DataTypes.STRING,
     },
-    email: {
-      type:DataTypes.STRING,
-      allowNull:false,
-      unique:true,
-      validate:{
-        isEmail:{
-          msg:`Email harus berupa fornat email`
-        },
-        notNull:{
-          msg:`Email harus diisi`
-        },
-        notEmpty:{
-          msg:`Email harus diisi`
-        }
-      }
-    },
-    password:{
-      type:DataTypes.STRING,
-      allowNull:false,
-      validate:{
-        notNull:{
-          msg:`Password harus diisi`
-        },
-        notEmpty:{
-          msg:`Password harus diisi`
-        },
-        customValidator(value) {
-          if (value.length <5 ) {
-            throw new Error("Password minimal 5 karakter");
-          }
-        }
-      }
-    },
-    role: {
-      type:DataTypes.STRING,
-      defaultValue: 'admin'
-    },
-    phoneNumber: DataTypes.STRING,
-    address: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
+    {
+      sequelize,
+      modelName: "User",
+    }
+  );
+  User.beforeCreate((user) => {
+    user.password = hashPassword(user.password);
   });
   return User;
 };

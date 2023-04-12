@@ -18,11 +18,14 @@
   },
   "homepage": "https://github.com/H8-P2-S2/fsjs-p2-v2-c1-server-laurenciusw#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "pg": "^8.10.0",
     "sequelize": "^6.31.0"
   },
   "devDependencies": {
+    "dotenv": "^16.0.3",
     "sequelize-cli": "^6.6.0"
   }
 }
