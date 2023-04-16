@@ -3,9 +3,17 @@ module.exports = (error, req, res, next) => {
   let status = 500;
 
   switch (error.name) {
-    case "EmailOrPasswordRequired":
+    case "categoryRequired":
       status = 400;
-      message = "email or password is required";
+      message = "Input the category";
+      break;
+    case "PasswordRequired":
+      status = 400;
+      message = "password is required";
+      break;
+    case "EmailRequired":
+      status = 400;
+      message = "email is required";
       break;
     case "SequelizeValidationError":
     case "SequelizeUniqueConstraintError":

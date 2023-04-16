@@ -1,0 +1,3 @@
+pL2EotEajQBtNtYL
+
+postgresql://postgres:pL2EotEajQBtNtYL@db.wdaneenamdkmzwfbiaps.supabase.co:5432/postgres

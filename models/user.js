@@ -19,10 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: `Nama harus diisi`,
+            msg: `Username cannot be empty`,
           },
           notEmpty: {
-            msg: `Nama harus diisi`,
+            msg: `Username cannot be empty`,
           },
         },
       },
@@ -32,13 +32,13 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         validate: {
           isEmail: {
-            msg: `Email harus berupa fornat email`,
+            msg: `Email must be in email format`,
           },
           notNull: {
-            msg: `Email harus diisi`,
+            msg: `Email cannot be empty`,
           },
           notEmpty: {
-            msg: `Email harus diisi`,
+            msg: `Email cannot be empty`,
           },
         },
       },
@@ -51,15 +51,10 @@ module.exports = (sequelize, DataTypes) => {
             msg: `password min 5 character`,
           },
           notNull: {
-            msg: `Password harus diisi`,
+            msg: `Input the password!`,
           },
           notEmpty: {
-            msg: `Password harus diisi`,
-          },
-          customValidator(value) {
-            if (value.length < 5) {
-              throw new Error("Password minimal 5 karakter");
-            }
+            msg: `Input the password!`,
           },
         },
       },

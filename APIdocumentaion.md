@@ -13,6 +13,14 @@ My Assets App is an application to manage your assets. This app has :
 
 > Get all assets
 
+_Request Header_
+
+```
+{
+  "access_token": "string"
+}
+```
+
 _Request Body_
 
 ```
@@ -74,12 +82,19 @@ _Response (500 - internal server error)_
 {
      message: "internal server error"
 }
-
 ```
 
 ### POST /cuisines
 
 > Create new asset
+
+_Request Header_
+
+```
+{
+  "access_token": "string"
+}
+```
 
 _Request Body_
 
@@ -145,6 +160,14 @@ _Response (500 - internal server error)_
 
 > Create new asset
 
+_Request Header_
+
+```
+{
+  "access_token": "string"
+}
+```
+
 _Request Body_
 
 ```
@@ -165,7 +188,6 @@ _Response (404 - not found)_
 {
      message: "data not found"
 }
-
 ```
 
 _Response (500 - internal server error)_
@@ -174,12 +196,17 @@ _Response (500 - internal server error)_
 {
      message: "internal server error"
 }
-
 ```
 
 ### GET /cuisines/:id
 
-> Get all assets
+_Request Header_
+
+```
+{
+  "access_token": "string"
+}
+```
 
 _Request Body_
 
@@ -201,7 +228,6 @@ _Response (200)_
     "createdAt": "2023-04-10T15:48:07.374Z",
     "updatedAt": "2023-04-10T15:48:07.374Z"
 }
-
 ```
 
 _Response (500 - internal server error)_
@@ -210,12 +236,17 @@ _Response (500 - internal server error)_
 {
      message: "internal server error"
 }
-
 ```
 
 ### GET /categories
 
-> Get all assets
+_Request Header_
+
+```
+{
+  "access_token": "string"
+}
+```
 
 _Request Body_
 
@@ -247,5 +278,109 @@ _Response (500 - internal server error)_
 ```
 {
      message: "internal server error"
+}
+```
+
+## POST /users/register
+
+_Request Header_
+
+```
+{
+  "access_token": "string"
+}
+```
+
+Request:
+
+- body:
+
+```
+{
+  "username": "string",
+  "email": "string",
+  "password": "string",
+  "phoneNumber": "string",
+  "address": "string",
+}
+```
+
+_Response (201 - Created)_
+
+```
+{
+  "message": "user with email (user.email) has been created"
+}
+```
+
+_Response (400 - Bad Request)_
+
+```
+{
+  "message": "username cannot be empty"
+}
+{
+  "message": "email is required"
+}
+{
+  "message": "password is required"
+}
+{
+  "message": "email must be unique"
+}
+```
+
+## POST /auth/login
+
+Request:
+
+- body:
+
+```
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+_Response (200 - OK)_
+
+```
+{
+  "access_token": "string",
+  "email": "string",
+  "userRole":"string"
+}
+```
+
+_Response (400 - Bad Request)_
+
+```
+{
+  "message": "email is required"
+}
+{
+  "message": "password is required"
+}
+```
+
+## POST /auth/login-google
+
+- body:
+
+```
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+_Response (200 - OK)_
+
+```
+{
+  "access_token": "string",
+  "userRole": "string",
+  userEmail,: "string"
 }
 ```
