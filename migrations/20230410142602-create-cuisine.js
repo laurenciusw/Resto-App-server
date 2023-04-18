@@ -21,9 +21,6 @@ module.exports = {
       imgUrl: {
         type: Sequelize.STRING,
       },
-      status: {
-        type: Sequelize.STRING,
-      },
       authorId: {
         allowNull: false,
         type: Sequelize.INTEGER,

@@ -169,6 +169,77 @@ class Controller {
       next(error);
     }
   }
+
+  static async createCategory(req, res, next) {
+    try {
+      let { name } = req.body;
+
+      let newCategory = await Category.create({
+        name,
+      });
+
+      res.status(201).json(newCategory);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteCategory(req, res, next) {
+    try {
+      let id = req.params.id;
+      let category = await Category.findByPk(id);
+
+      if (!category) throw { name: "NotFound" };
+      await Category.destroy({
+        where: { id },
+      });
+      res
+        .status(200)
+        .json({ message: `Category with id ${id} succes to delete` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async changeCuisine(req, res, next) {
+    try {
+      let id = req.params.id;
+      let newData = {
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        imgUrl: req.body.imgUrl,
+        categoryId: req.body.categoryId,
+      };
+      let cuisine = await Cuisine.findByPk(id);
+      if (!cuisine) throw { name: "NotFound" };
+
+      await Cuisine.update(newData, { where: { id } });
+      res
+        .status(200)
+        .json({ message: `cuisine with id ${id} has been updated` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async changeStatus(req, res, next) {
+    try {
+      let id = req.params.id;
+      let newStatus = {
+        status: req.body.status,
+      };
+      let cuisine = await Cuisine.findByPk(id);
+      if (!cuisine) throw { name: "NotFound" };
+
+      await Cuisine.update(newStatus, { where: { id } });
+      res.status(200).json({
+        message: `cuisine status with id ${id} has benn changed to ${newStatus}`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = Controller;

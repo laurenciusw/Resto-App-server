@@ -55,10 +55,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      role: {
-        type: DataTypes.STRING,
-        defaultValue: "active",
-      },
       imgUrl: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -73,6 +69,19 @@ module.exports = (sequelize, DataTypes) => {
       },
       authorId: DataTypes.INTEGER,
       categoryId: DataTypes.INTEGER,
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "active",
+        validate: {
+          notNull: {
+            msg: `Input the cuisine status`,
+          },
+          notEmpty: {
+            msg: `Input the cuisine status`,
+          },
+        },
+      },
     },
     {
       sequelize,
