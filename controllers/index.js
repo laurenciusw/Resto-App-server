@@ -1,5 +1,5 @@
 const { comparePassword, encodeToken } = require("../helpers/helper");
-const { Cuisine, User, Category } = require("../models/");
+const { Cuisine, User, Category, History } = require("../models/");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -43,6 +43,14 @@ class Controller {
         imgUrl,
         authorId: req.user.id,
         categoryId,
+      });
+
+      let user = await User.findByPk(newCuisine.authorId);
+
+      let newHistory = await History.create({
+        name: newCuisine.name,
+        description: `new Cuisine with id  ${newCuisine.id} has been created`,
+        updatedBy: user.email,
       });
 
       res.status(201).json(newCuisine);
@@ -122,10 +130,11 @@ class Controller {
 
       let acces_token = encodeToken(payload);
       let userRole = user.role;
+      let userEmail = user.email;
 
       res.status(200).json({
         acces_token,
-        email,
+        userEmail,
         userRole,
       });
     } catch (error) {
@@ -215,6 +224,13 @@ class Controller {
       if (!cuisine) throw { name: "NotFound" };
 
       await Cuisine.update(newData, { where: { id } });
+      console.log(req.user);
+      let newHistory = await History.create({
+        name: cuisine.name,
+        description: `Cuisine with id ${id} has been updated`,
+        updatedBy: req.user.email,
+      });
+
       res
         .status(200)
         .json({ message: `cuisine with id ${id} has been updated` });
@@ -232,7 +248,14 @@ class Controller {
       let cuisine = await Cuisine.findByPk(id);
       if (!cuisine) throw { name: "NotFound" };
 
+      let newHistory = await History.create({
+        name: cuisine.name,
+        description: `Cuisine status with id ${id} has been updated from ${cuisine.status} to ${req.body.status}`,
+        updatedBy: req.user.email,
+      });
+
       await Cuisine.update(newStatus, { where: { id } });
+
       res.status(200).json({
         message: `cuisine status with id ${id} has benn changed to ${newStatus}`,
       });
