@@ -10,7 +10,14 @@ cuisineRouter.post("/categories", authentiaction, Controller.createCategory);
 
 cuisineRouter.post("/cuisines/", authentiaction, Controller.createCuisine);
 
-cuisineRouter.get("/cuisines/:id", authentiaction, Controller.getCuisineById);
+cuisineRouter.get("/histories", Controller.getHistory);
+
+cuisineRouter.get(
+  "/cuisines/:id",
+  authentiaction,
+  authorization,
+  Controller.getCuisineById
+);
 
 cuisineRouter.put(
   "/cuisines/:id",

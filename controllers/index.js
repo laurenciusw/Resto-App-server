@@ -143,6 +143,7 @@ class Controller {
   }
 
   static async googleLogin(req, res, next) {
+    console.log(req.headers.google_token, "<<<<<<");
     try {
       let google_token = req.headers.google_token;
 
@@ -259,6 +260,18 @@ class Controller {
       res.status(200).json({
         message: `cuisine status with id ${id} has benn changed to ${newStatus}`,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getHistory(req, res, next) {
+    try {
+      const history = await History.findAll({
+        order: [["updatedAt", "desc"]],
+      });
+
+      res.status(200).json(history);
     } catch (error) {
       next(error);
     }
