@@ -40,6 +40,6 @@ cuisineRouter.delete(
   Controller.deleteCuisine
 );
 
-cuisineRouter.delete("/categories/:id", Controller.deleteCategory);
+// cuisineRouter.delete("/categories/:id", Controller.deleteCategory);
 
 module.exports = cuisineRouter;
