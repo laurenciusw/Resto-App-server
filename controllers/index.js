@@ -1,5 +1,5 @@
 const { comparePassword, encodeToken } = require("../helpers/helper");
-const { Cuisine, User, Category, History } = require("../models/");
+const { Cuisine, User, Category, History, Customer } = require("../models/");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -272,6 +272,63 @@ class Controller {
       });
 
       res.status(200).json(history);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async customerRegister(req, res, next) {
+    try {
+      const { username, email, password, phoneNumber, address } = req.body;
+
+      if (!email) throw { name: "EmailRequired" };
+
+      if (!password) throw { name: "PasswordRequired" };
+
+      const user = await Customer.create({
+        username,
+        email,
+        password,
+        phoneNumber,
+        address,
+      });
+      res.status(201).json({
+        message: `customer with email ${email} succesfully created`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async customerLogin(req, res, next) {
+    try {
+      const { username, email, password, role, phoneNumber, address } =
+        req.body;
+
+      if (!email) throw { name: "EmailRequired" };
+
+      if (!password) throw { name: "PasswordRequired" };
+
+      const costumer = await Customer.findOne({ where: { email } });
+
+      if (!costumer) throw { name: "InvalidCredentials" };
+
+      const isValidPassword = comparePassword(password, costumer.password);
+      if (!isValidPassword) throw { name: "InvalidCredentials" };
+
+      let payload = {
+        id: costumer.id,
+      };
+
+      let acces_token = encodeToken(payload);
+      let userRole = costumer.role;
+      let userEmail = costumer.email;
+
+      res.status(200).json({
+        acces_token,
+        userEmail,
+        userRole,
+      });
     } catch (error) {
       next(error);
     }
