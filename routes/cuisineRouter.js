@@ -2,39 +2,39 @@ const Controller = require("../controllers");
 const { authentiaction, authorization } = require("../middlewares/auth");
 const cuisineRouter = require("express").Router();
 
-cuisineRouter.get("/cuisines", authentiaction, Controller.getCuisines);
+cuisineRouter.get("pub/cuisines", authentiaction, Controller.getCuisines);
 
-cuisineRouter.get("/categories", authentiaction, Controller.getCategories);
+cuisineRouter.get("pub/categories", authentiaction, Controller.getCategories);
 
-cuisineRouter.post("/categories", authentiaction, Controller.createCategory);
+cuisineRouter.post("pub/categories", authentiaction, Controller.createCategory);
 
-cuisineRouter.post("/cuisines/", authentiaction, Controller.createCuisine);
+cuisineRouter.post("pub/cuisines", authentiaction, Controller.createCuisine);
 
-cuisineRouter.get("/histories", Controller.getHistory);
+cuisineRouter.get("pub/histories", Controller.getHistory);
 
 cuisineRouter.get(
-  "/cuisines/:id",
+  "pub/cuisines/:id",
   authentiaction,
   authorization,
   Controller.getCuisineById
 );
 
 cuisineRouter.put(
-  "/cuisines/:id",
+  "pub/cuisines/:id",
   authentiaction,
   authorization,
   Controller.changeCuisine
 );
 
 cuisineRouter.patch(
-  "/cuisines/:id",
+  "pub/cuisines/:id",
   authentiaction,
   authorization,
   Controller.changeStatus
 );
 
 cuisineRouter.delete(
-  "/cuisines/:id",
+  "pub/cuisines/:id",
   authentiaction,
   authorization,
   Controller.deleteCuisine
