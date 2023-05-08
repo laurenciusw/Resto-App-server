@@ -9,7 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Cuisine.belongsTo(models.Category, { foreignKey: "categoryId" });
-      Cuisine.belongsTo(models.User, { foreignKey: "authorId" });
+      Cuisine.belongsTo(models.User, { foreignKey: "userId" });
+      Cuisine.belongsToMany(models.User, {
+        through: models.Bookmark,
+        foreignKey: "cuisineId",
+      });
     }
   }
   Cuisine.init(
@@ -67,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      authorId: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
       categoryId: DataTypes.INTEGER,
       status: {
         type: DataTypes.STRING,

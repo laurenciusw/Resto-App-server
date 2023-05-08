@@ -14,6 +14,14 @@ app.use(cors());
 app.use(require("./routes"));
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
+
+module.exports = app;
+
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Listening from port ${port}`);
+  });
+}

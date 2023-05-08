@@ -5,7 +5,7 @@
             "username": "johndoe",
             "email": "johndoe@example.com",
             "password": "password123",
-            "role": "staff",
+            "role": "admin",
             "phoneNumber": "123-456-7890",
             "address": "123 Main St, Anytown USA"
           },
@@ -23,7 +23,7 @@
             "username": "sarahjane",
             "email": "sarahjane@example.com",
             "password": "password123",
-            "role": "staff",
+            "role": "admin",
             "phoneNumber": "555-555-5555",
             "address": "123 Main St, Anytown USA"
           },
@@ -57,8 +57,9 @@
             "name": "Cheeseburger",
             "description": "A classic cheeseburger with juicy beef patty, melted cheese, lettuce, and tomato",
             "price": 8000,
-            "imgUrl": "https://example.com/cheeseburger.jpg",
-            "authorId": 1,
+            "imgUrl": "https://groundbeefrecipes.com/wp-content/uploads/double-bacon-cheeseburger-recipe-6-500x500.jpg",
+            "status": "Active",
+            "userId": 1,
             "categoryId": 2
         },
         {
@@ -66,8 +67,9 @@
             "name": "Grilled Chicken Sandwich",
             "description": "Grilled chicken breast topped with bacon, lettuce, tomato, and mayo on a toasted bun",
             "price": 7500,
-            "imgUrl": "https://example.com/grilled-chicken-sandwich.jpg",
-            "authorId": 2,
+            "imgUrl": "https://c.ndtvimg.com/2021-07/vckh316o_grilled-chicken-sandwich_625x300_28_July_21.jpg",
+            "status": "Active",
+            "userId": 2,
             "categoryId": 1
         },
         {
@@ -76,7 +78,8 @@
             "description": "Fresh romaine lettuce topped with grilled chicken, croutons, and parmesan cheese in a creamy Caesar dressing",
             "price": 6000,
             "imgUrl": "https://example.com/caesar-salad.jpg",
-            "authorId": 3,
+            "status": "Active",
+            "userId": 3,
             "categoryId": 3
         },
         {
@@ -85,7 +88,8 @@
             "description": "Three soft-shell tacos filled with seasoned ground beef, lettuce, tomato, and shredded cheese",
             "price": 8500,
             "imgUrl": "https://example.com/beef-tacos.jpg",
-            "authorId": 4,
+            "status": "Active",
+            "userId": 4,
             "categoryId": 2
         },
         {
@@ -94,7 +98,8 @@
             "description": "Fresh fettuccine pasta in a creamy Alfredo sauce with chicken and broccoli",
             "price": 9000,
             "imgUrl": "https://example.com/fettuccine-alfredo.jpg",
-            "authorId": 1,
+            "status": "Active",
+            "userId": 1,
             "categoryId": 2
         },
         {
@@ -103,7 +108,8 @@
             "description": "Golden-brown battered fish with crispy fries and tartar sauce",
             "price": 7500,
             "imgUrl": "https://example.com/fish-and-chips.jpg",
-            "authorId": 2,
+            "status": "Active",
+            "userId": 2,
             "categoryId": 1
         },
         {
@@ -112,7 +118,8 @@
             "description": "Breaded chicken breast topped with marinara sauce and melted mozzarella cheese, served with spaghetti",
             "price": 9500,
             "imgUrl": "https://example.com/chicken-parmesan.jpg",
-            "authorId": 3,
+            "status": "Active",
+            "userId": 3,
             "categoryId": 2
         },
         {
@@ -121,8 +128,29 @@
             "description": "A plant-based patty with lettuce, tomato, and onion on a whole wheat bun",
             "price": 8000,
             "imgUrl": "https://example.com/veggie-burger.jpg",
-            "authorId": 4,
+            "status": "Active",
+            "userId": 4,
             "categoryId": 3
-        }       
+        },
+        {
+            "id": 9,
+            "name": "Vegan Burger",
+            "description": "A plant-based patty with lettuce, tomato, and onion on a whole wheat bun",
+            "price": 8000,
+            "imgUrl": "https://example.com/veggie-burger.jpg",
+            "status": "Active",
+            "userId": 4,
+            "categoryId": 3
+        },
+        {
+            "id": 10,
+            "name": "Vegan Burger",
+            "description": "A plant-based patty with lettuce, tomato, and onion on a whole wheat bun",
+            "price": 8000,
+            "imgUrl": "https://example.com/veggie-burger.jpg",
+            "status": "Active",
+            "userId": 4,
+            "categoryId": 3
+        }        
     ]
 }

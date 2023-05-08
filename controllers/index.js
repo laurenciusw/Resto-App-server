@@ -1,6 +1,9 @@
 const { comparePassword, encodeToken } = require("../helpers/helper");
-const { Cuisine, User, Category, History, Customer } = require("../models/");
+const { Cuisine, User, Category, History, Bookmark } = require("../models/");
+const { Op } = require("sequelize");
 const { OAuth2Client } = require("google-auth-library");
+const axios = require("axios");
+
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class Controller {
@@ -277,6 +280,7 @@ class Controller {
     }
   }
 
+  //customer side
   static async customerRegister(req, res, next) {
     try {
       const { username, email, password, phoneNumber, address } = req.body;
@@ -285,10 +289,11 @@ class Controller {
 
       if (!password) throw { name: "PasswordRequired" };
 
-      const user = await Customer.create({
+      const user = await User.create({
         username,
         email,
         password,
+        role: "Customer",
         phoneNumber,
         address,
       });
@@ -302,6 +307,7 @@ class Controller {
 
   static async customerLogin(req, res, next) {
     try {
+      console.log("masuk");
       const { username, email, password, role, phoneNumber, address } =
         req.body;
 
@@ -309,26 +315,182 @@ class Controller {
 
       if (!password) throw { name: "PasswordRequired" };
 
-      const costumer = await Customer.findOne({ where: { email } });
+      const user = await User.findOne({ where: { email } });
 
-      if (!costumer) throw { name: "InvalidCredentials" };
+      if (!user) throw { name: "InvalidCredentials" };
 
-      const isValidPassword = comparePassword(password, costumer.password);
+      const isValidPassword = comparePassword(password, user.password);
       if (!isValidPassword) throw { name: "InvalidCredentials" };
 
       let payload = {
-        id: costumer.id,
+        id: user.id,
       };
 
-      let acces_token = encodeToken(payload);
-      let userRole = costumer.role;
-      let userEmail = costumer.email;
+      let access_token = encodeToken(payload);
+      let userRole = user.role;
+      let userEmail = user.email;
 
       res.status(200).json({
-        acces_token,
+        access_token,
         userEmail,
-        userRole,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async customerGoogleLogin(req, res, next) {
+    console.log(req.headers.google_token, "<<<<<<");
+    try {
+      let google_token = req.headers.google_token;
+
+      const ticket = await client.verifyIdToken({
+        idToken: google_token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+
+      let user = await User.findOne({
+        where: { email: payload.email },
+      });
+      if (!user) {
+        user = await User.create({
+          username: payload.name,
+          email: payload.email,
+          password: Math.random() + "ABCD",
+          role: "Customer",
+        });
+      }
+      let payload_access_token = {
+        id: user.id,
+      };
+      let acces_token = encodeToken(payload_access_token);
+      let userRole = user.role;
+      let userEmail = user.email;
+      res.status(200).json({
+        acces_token,
+        userRole,
+        userEmail,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async allCuisines(req, res, next) {
+    const { page, filter, categorySearch } = req.query;
+    const { id } = req.params;
+
+    let query = {
+      limit: 9,
+      where: { status: "Active" },
+      order: [["id", "ASC"]],
+    };
+
+    if (page) {
+      query.offset = (page - 1) * query.limit;
+    }
+
+    if (categorySearch) {
+      query.where.categoryId = categorySearch;
+    }
+
+    if (filter) {
+      query.where = {
+        ...query.where,
+        name: {
+          [Op.iLike]: `%${filter}%`,
+        },
+      };
+    }
+
+    if (id) {
+      req.query = null;
+      query = { where: { id } };
+    }
+
+    try {
+      let { count, rows } = await Cuisine.findAndCountAll(query);
+      const result = {
+        totalPage: Math.ceil(count / query.limit),
+        currentPage: page,
+        data: rows,
+      };
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error, "<<<<<<<");
+      next(error);
+    }
+  }
+
+  static async detailCuisine(req, res, next) {
+    try {
+      let cuisine = await Cuisine.findByPk(req.params.id);
+      if (!cuisine) throw { name: "NotFound" };
+
+      const baseurl =
+        "https://api.qr-code-generator.com/v1/create?access-token=w9Of7YgHEMPY8TUeqi_c9JUu5lVe6mDGwAzG5rCFcA5F9w-mXmZ1fLLzVS2Cxs11";
+
+      const { data } = await axios({
+        url: baseurl,
+        method: "post",
+        data: {
+          frame_name: "no-frame",
+          qr_code_text: `http://localhost:5173/cuisines/${req.params.id}`,
+          image_format: "SVG",
+          qr_code_logo: "scan-me-square",
+        },
+      });
+
+      cuisine.dataValues.qr = data;
+      res.status(200).json(cuisine);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  // bookmark
+
+  static async createBookmark(req, res, next) {
+    try {
+      let cuisine = await Cuisine.findByPk(req.params.id);
+      if (!cuisine) throw { name: "NotFound" };
+      console.log(req.user);
+
+      let newBookmark = await Bookmark.create({
+        userId: req.user.id,
+        cuisineId: cuisine.id,
+      });
+
+      // let user = await User.findByPk(newCuisine.authorId);
+
+      // let newHistory = await History.create({
+      //   name: newCuisine.name,
+      //   description: `new Cuisine with id  ${newCuisine.id} has been created`,
+      //   updatedBy: user.email,
+      // });
+
+      res.status(201).json(newBookmark);
+    } catch (error) {
+      console.log(error);
+
+      next(error);
+    }
+  }
+
+  static async getBookmark(req, res, next) {
+    try {
+      let userId = req.user.id;
+
+      const data = await Bookmark.findAll({
+        where: { userId },
+        include: {
+          model: Cuisine,
+        },
+      });
+      // console.log(data);
+      res.status(201).json(data);
     } catch (error) {
       next(error);
     }
